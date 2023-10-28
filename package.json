@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "express": "^4.18.2",
+    "puppeteer": "^21.4.1",
+    "socket.io": "^4.7.2",
+    "ws": "^8.14.2",
+    "xvfb": "^0.4.0"
+  }
+}
