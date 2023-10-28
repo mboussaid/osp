@@ -109,7 +109,7 @@ function onHandleBrowser() {
   });
 }
 class OSPService {
-  static async onReady() {
+  static async initializeOSPService() {
     return new Promise(async (resolve, reject) => {
       if (isReady) return resolve();
       io = await onHandleWebSocketServer();
@@ -128,7 +128,7 @@ class OSPService {
   constructor() {
     this.#page = null;
   }
-  async goto(url) {
+  async navigateToURL(url) {
     return new Promise(async (resolve, reject) => {
       if (!browser) return reject();
       this.#page = await browser.newPage();
@@ -148,7 +148,7 @@ class OSPService {
       resolve(tatget._targetId);
     });
   }
-  async startRecording() {
+  async startVideoRecording() {
     return new Promise(async (resolve, reject) => {
       if (!this.#page) return reject();
       const id = await this.#onGetPageId();
@@ -167,23 +167,18 @@ class OSPService {
       resolve(stream);
     });
   }
-  async stopRecording() {
+  async stopVideoRecording() {
     return new Promise(async (resolve, reject) => {
       if (!this.#page) return reject();
       const id = await this.#onGetPageId();
     });
   }
-  async pipeToRtmp(url, key) {
+  async streamToRTMPServer(url, key) {
     return new Promise((resolve, reject) => {
       if (!url || !this.#stream) return reject();
       const rmtpUrl = url && key ? `${url}/${key}` : url;
-      const process = spawn("ffmpeg", [
-        "-i",
-        "pipe:0",
-        "-f",
-        "flv",
-        rmtpUrl,
-      ]);
+      const args = `-re -i pipe:0 -c:v libx264 -pix_fmt yuv420p -profile:v high -preset slow -tune film -crf 18 -b:a 384k -ac 2 -ar 44100 -c:a aac -f flv ${rmtpUrl}`
+      const process = spawn("ffmpeg",args.split(" ").map(item=>item.trim()));
       process.stderr.on("data", (data) => console.log(data.toString()));
       process.stdout.on("data", (data) => console.log(data.toString()));
       this.#stream.pipe(process.stdin);
@@ -191,20 +186,12 @@ class OSPService {
       resolve();
     });
   }
-  async pipeToFile(filePath) {
+  async streamToFile(filePath) {
     return new Promise((resolve, reject) => {
       if (!filePath || !this.#stream) return reject();
       const ext = path.extname(filePath).replace('.','')
-      const process = spawn("ffmpeg", [
-        '-y',
-        "-i",
-        "pipe:0",
-        "-c",
-        "copy",
-        "-f",
-        ext,
-        filePath
-      ]);
+      const args = `-re -y -i pipe:0 -c copy -f ${ext} ${filePath}`
+      const process = spawn("ffmpeg",args.split(" ").map(item=>item.trim()));
       process.stderr.on("data", (data) => console.log(data.toString()));
       process.stdout.on("data", (data) => console.log(data.toString()));
       this.#stream.pipe(process.stdin);

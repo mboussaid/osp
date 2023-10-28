@@ -71,7 +71,7 @@ function handleStartRecording(id){
           data:e.data
         })
       }
-      recorder.start(20);
+      recorder.start(0);
       recorders[id] = recorder;
     })
 }

@@ -1,11 +1,11 @@
 const OSPService = require('./src/OSPService')
 const fs = require('fs');
-OSPService.onReady()
+OSPService.initializeOSPService()
 .then(async ()=>{
-    const instance = new OSPService();
-    await instance.goto('https://www.youtube.com/watch?v=kl69a9JEXM0');
-    const stream = await instance.startRecording();
-    // const writeStream = fs.createWriteStream('file.mp4')
-    // stream.pipe(writeStream)
-    await instance.pipeToFile('hello.mp4')
+    const instance1 = new OSPService();
+    await instance1.navigateToURL('https://www.youtube.com/watch?v=kl69a9JEXM0');
+    const stream1 = await instance1.startVideoRecording();
+    await instance1.streamToRTMPServer('rtmp://localhost/live/stream1')
+
 },()=>{})
+ 
