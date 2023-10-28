@@ -19,6 +19,14 @@ let xvfb = null;
 let audioSinkName = null;
 let audioSinkId = null;
 const streams = {};
+function clean(){
+  spawn('pactl', [
+    'unload-module',
+    audioSinkId
+  ]);
+}
+process.on('exit',clean)
+process.on('SIGINT',clean)
 function handleMessage(message) {
   if (!message) return;
   const json = JSON.parse(message);
@@ -54,6 +62,15 @@ function onHandleWebSocketServer() {
       socket.on(EVENTS.RECORDER_DATA, (data) => {
         myEmitter.emit(EVENTS.RECORDER_DATA, data);
       });
+      socket.on(EVENTS.STOP_RECORDING, (data) => {
+        myEmitter.emit(EVENTS.STOP_RECORDING, data);
+      });
+      socket.on(EVENTS.PAUSE_RECORDING, (data) => {
+        myEmitter.emit(EVENTS.PAUSE_RECORDING, data);
+      });
+      socket.on(EVENTS.RESUME_RECORDING, (data) => {
+        myEmitter.emit(EVENTS.RESUME_RECORDING, data);
+      });
     });
     server.listen(3000);
     resolve(tmp);
@@ -70,7 +87,7 @@ function onHandleBrowser() {
     xvfb = new Xvfb({
       xvfb_args:['-screen', '0', '1920x1080x24']
     });
-    xvfb.startSync()
+    // xvfb.startSync()
     puppeteer
       .launch({
         headless: false,
@@ -83,7 +100,6 @@ function onHandleBrowser() {
           `--autoplay-policy=no-user-gesture-required`,
           "--hide-scrollbars",
           "--disable-infobars",
-          "--start-fullscreen",
           "--enable-automation",
           "--hide-crash-restore-bubble",
           "--enable-usermedia-screen-capturing",
@@ -94,8 +110,8 @@ function onHandleBrowser() {
           "--no-sandbox",
           `--alsa-output-device=${audioSinkName}`,
           '--start-maximized',
-          '--kiosk'
-          // `--window-size=1800,900`
+          '--kiosk',
+          "--start-fullscreen"
         ],
         ignoreDefaultArgs: ["--enable-automation"],
         protocolTimeout: 0,
@@ -169,9 +185,45 @@ class OSPService {
   }
   async stopVideoRecording() {
     return new Promise(async (resolve, reject) => {
-      if (!this.#page) return reject();
+      if (!this.#page ) return reject();
+      if(!this.#stream) return resolve();
       const id = await this.#onGetPageId();
+      io.emit(EVENTS.STOP_RECORDING, id);
+      myEmitter.once(EVENTS.STOP_RECORDING, (data) => {
+        if (data.id === id) {
+          this.#stream.destroy();
+          this.#stream = null;
+          resolve();
+        }
+      });
+
     });
+  }
+  async pauseVideoRecording(){
+    return new Promise(async (resolve,reject)=>{
+      if(!this.#page || !this.#stream) return reject();
+      const id = await this.#onGetPageId();
+      io.emit(EVENTS.PAUSE_RECORDING, id);
+      myEmitter.once(EVENTS.PAUSE_RECORDING, (data) => {
+        if (data.id === id) {
+          resolve();
+        }
+      });
+
+    })
+  }
+  async resumeVideoRecording(){
+    return new Promise(async (resolve,reject)=>{
+      if(!this.#page || !this.#stream) return reject();
+      const id = await this.#onGetPageId();
+      io.emit(EVENTS.RESUME_RECORDING, id);
+      myEmitter.once(EVENTS.RESUME_RECORDING, (data) => {
+        if (data.id === id) {
+          resolve();
+        }
+      });
+
+    })
   }
   async streamToRTMPServer(url, key) {
     return new Promise((resolve, reject) => {
@@ -179,8 +231,8 @@ class OSPService {
       const rmtpUrl = url && key ? `${url}/${key}` : url;
       const args = `-re -i pipe:0 -c:v libx264 -pix_fmt yuv420p -profile:v high -preset slow -tune film -crf 18 -b:a 384k -ac 2 -ar 44100 -c:a aac -f flv ${rmtpUrl}`
       const process = spawn("ffmpeg",args.split(" ").map(item=>item.trim()));
-      process.stderr.on("data", (data) => console.log(data.toString()));
-      process.stdout.on("data", (data) => console.log(data.toString()));
+      // process.stderr.on("data", (data) => console.log(data.toString()));
+      // process.stdout.on("data", (data) => console.log(data.toString()));
       this.#stream.pipe(process.stdin);
       this.#processes.push(process);
       resolve();
@@ -192,8 +244,8 @@ class OSPService {
       const ext = path.extname(filePath).replace('.','')
       const args = `-re -y -i pipe:0 -c copy -f ${ext} ${filePath}`
       const process = spawn("ffmpeg",args.split(" ").map(item=>item.trim()));
-      process.stderr.on("data", (data) => console.log(data.toString()));
-      process.stdout.on("data", (data) => console.log(data.toString()));
+      // process.stderr.on("data", (data) => console.log(data.toString()));
+      // process.stdout.on("data", (data) => console.log(data.toString()));
       this.#stream.pipe(process.stdin);
       this.#processes.push(process);
       resolve();

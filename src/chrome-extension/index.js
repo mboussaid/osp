@@ -31,6 +31,47 @@ socket.on('close', (event) => {
 socket.on(EVENTS.START_RECORDING,id=>{
   handleStartRecording(id)
 })
+socket.on(EVENTS.STOP_RECORDING,id=>{
+  handleStopRecording(id)
+})
+socket.on(EVENTS.PAUSE_RECORDING,id=>{
+  handlePauseRecording(id)
+})
+socket.on(EVENTS.RESUME_RECORDING,id=>{
+  handleResumeRecording(id)
+})
+function handleResumeRecording(id){
+  if(!id) return
+  const recorder = recorders[id];
+  if(!recorder) return
+  try{
+    recorder.resume();
+  }catch(err){}
+  socket.emit(EVENTS.RESUME_RECORDING,{
+    id:id
+  })
+}
+function handlePauseRecording(id){
+  if(!id) return
+  const recorder = recorders[id];
+  if(!recorder) return
+  try{
+    recorder.pause();
+  }catch(err){}
+  socket.emit(EVENTS.PAUSE_RECORDING,{
+    id:id
+  })
+}
+function handleStopRecording(id){
+  if(!id) return
+  const recorder = recorders[id];
+  if(!recorder) return
+  recorder.stop();
+  delete recorders[id];
+  socket.emit(EVENTS.STOP_RECORDING,{
+    id:id
+  })
+}
 function handleStartRecording(id){
   if(!id) return
   chrome.tabCapture.capture({
@@ -72,6 +113,9 @@ function handleStartRecording(id){
         })
       }
       recorder.start(0);
+      recorder.onstop = ()=>{
+        stream.getTracks().forEach(t=>t.stop())
+      }
       recorders[id] = recorder;
     })
 }
