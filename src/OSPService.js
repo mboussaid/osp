@@ -159,7 +159,6 @@ class OSPService {
         },
       });
       myEmitter.on(EVENTS.RECORDER_DATA, (data) => {
-        console.log(data)
         if (data.id === id) {
           stream.write(new Buffer.from(data.data));
         }
@@ -184,6 +183,26 @@ class OSPService {
         "-f",
         "flv",
         rmtpUrl,
+      ]);
+      process.stderr.on("data", (data) => console.log(data.toString()));
+      process.stdout.on("data", (data) => console.log(data.toString()));
+      this.#stream.pipe(process.stdin);
+      this.#processes.push(process);
+      resolve();
+    });
+  }
+  async pipeToFile(filePath) {
+    return new Promise((resolve, reject) => {
+      if (!filePath || !this.#stream) return reject();
+      const ext = path.extname(filePath).replace('.','')
+      console.log(ext)
+      const process = spawn("ffmpeg", [
+        '-y',
+        "-i",
+        "pipe:0",
+        "-f",
+        ext,
+        filePath
       ]);
       process.stderr.on("data", (data) => console.log(data.toString()));
       process.stdout.on("data", (data) => console.log(data.toString()));
