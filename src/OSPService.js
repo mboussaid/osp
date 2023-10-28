@@ -159,6 +159,7 @@ class OSPService {
         },
       });
       myEmitter.on(EVENTS.RECORDER_DATA, (data) => {
+        console.log(data)
         if (data.id === id) {
           stream.write(new Buffer.from(data.data));
         }

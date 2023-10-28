@@ -36,6 +36,12 @@ function handleStartRecording(id){
   chrome.tabCapture.capture({
     audio:true,
     video: true,
+    audioConstraints:{
+      mandatory: {
+        chromeMediaSource: "tab",
+        chromeMediaSourceId: id,
+      }
+    },
     videoConstraints: {
       mandatory: {
         chromeMediaSource: 'tab',
@@ -54,20 +60,9 @@ function handleStartRecording(id){
       ///
       const recorder = new MediaRecorder(stream,{
         ignoreMutedMedia:true,
-        // mimeType: 'video/webm;codecs=vp9,opus', // VP9 video and Opus audio
-        // bitsPerSecond: 10000000, // 10 Mbps video bitrate
-        video: {
-          width: { min: 1280, ideal: 1920, max: 1920 },
-          height: { min: 720, ideal: 1080, max: 1080 },
-          frameRate: { min: 30, ideal: 60 },
-          videoBitsPerSecond: 3000000,
-          audioBitsPerSecond: 128000,
-          ignoreMutedMedia: true,
-          mimeType: 'video/webm;codecs=vp8,vp9,opus',
-        },
-        audio: {
-          channelCount: 2, // Stereo audio
-        }
+        mimeType: 'video/webm;codecs=vp8,vp9,opus',
+        videoBitsPerSecond:10000000,
+        audioBitsPerSecond:10000000
       });
       recorder.ondataavailable = (e)=>{
         if(e.data.size === 0) return
