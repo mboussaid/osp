@@ -195,11 +195,12 @@ class OSPService {
     return new Promise((resolve, reject) => {
       if (!filePath || !this.#stream) return reject();
       const ext = path.extname(filePath).replace('.','')
-      console.log(ext)
       const process = spawn("ffmpeg", [
         '-y',
         "-i",
         "pipe:0",
+        "-c",
+        "copy",
         "-f",
         ext,
         filePath
