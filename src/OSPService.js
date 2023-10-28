@@ -75,11 +75,6 @@ function onHandleBrowser() {
       .launch({
         headless: false,
         defaultViewport: null,
-        // defaultViewport: {
-        //   width:1920,
-        //   height:1080
-        // },
-        // devtools: true,
         args: [
           `--load-extension=${extensionPath}`,
           `--disable-extensions-except=${extensionPath}`,
@@ -137,12 +132,12 @@ class OSPService {
     return new Promise(async (resolve, reject) => {
       if (!browser) return reject();
       this.#page = await browser.newPage();
+      await this.#page.setDefaultNavigationTimeout(0); // Set a longer timeout (e.g., 60 seconds)
+      await this.#page.goto(url);
       await this.#page.setViewport({
         width:1920,
         height:1080
       });
-      await this.#page.setDefaultNavigationTimeout(0); // Set a longer timeout (e.g., 60 seconds)
-      await this.#page.goto(url);
       resolve();
     });
   }
