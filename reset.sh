@@ -1,1 +1,4 @@
-pacmd list-sink-inputs | grep 'index' | awk '{print $2}' | xargs -I{} pacmd move-sink-input {} 0
+for id in {0..100}; do
+  echo $id;
+  pactl unload-module $id 2>/dev/null;
+done
