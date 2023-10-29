@@ -1,0 +1,1 @@
+pacmd list-sink-inputs | grep 'index' | awk '{print $2}' | xargs -I{} pacmd move-sink-input {} 0
