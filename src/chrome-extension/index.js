@@ -101,8 +101,8 @@ function handleStartRecording(id){
       ///
       const recorder = new MediaRecorder(stream,{
         ignoreMutedMedia:true,
-        mimeType: 'video/webm;codecs=vp8,vp9,opus',
-        videoBitsPerSecond:10000000,
+        mimeType: 'video/webm;codecs=vp9',
+        videoBitsPerSecond:20000000,
         audioBitsPerSecond:10000000
       });
       recorder.ondataavailable = (e)=>{
