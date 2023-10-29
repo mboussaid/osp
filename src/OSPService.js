@@ -87,7 +87,7 @@ function onHandleBrowser() {
     xvfb = new Xvfb({
       xvfb_args:['-screen', '0', '1920x1080x24']
     });
-    // xvfb.startSync()
+    xvfb.startSync()
     puppeteer
       .launch({
         headless: false,

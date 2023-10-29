@@ -3,11 +3,12 @@ const fs = require('fs');
 OSPService.initializeOSPService()
 .then(async ()=>{
     const instance1 = new OSPService();
-    await instance1.navigateToURL('chrome://version/');
+    await instance1.navigateToURL('https://www.youtube.com/watch?v=CeAindL1bsE');
     const stream1 = await instance1.startVideoRecording();
-    await instance1.streamToRTMPServer('rtmp://localhost/live/stream1')
+    await instance1.streamToFile('file.mp4')
     setTimeout(async ()=>{
         await instance1.stopVideoRecording();
-    },5000)
+        process.exit(0)
+    },60*1000*2)
 },()=>{})
  
