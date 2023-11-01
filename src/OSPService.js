@@ -38,6 +38,7 @@ function handleMessage(message) {
 }
 async function onStartAudioSink() {
   return new Promise((resolve, reject) => {
+    return resolve();
     audioSinkName = `OSP_AUIDIO_SINK_${Date.now()}`;
     process.env.PULSE_SINK = audioSinkName;
     exec(
@@ -87,11 +88,12 @@ function onHandleBrowser() {
     xvfb = new Xvfb({
       xvfb_args:['-screen', '0', '1920x1080x24']
     });
-    xvfb.startSync()
+    // xvfb.startSync()
     puppeteer
       .launch({
         headless: false,
         defaultViewport: null,
+        // devtools:true,
         args: [
           `--load-extension=${extensionPath}`,
           `--disable-extensions-except=${extensionPath}`,
@@ -108,10 +110,10 @@ function onHandleBrowser() {
           "--disable-dev-shm-usage",
           "--no-zygote",
           "--no-sandbox",
-          `--alsa-output-device=${audioSinkName}`,
-          '--start-maximized',
-          '--kiosk',
-          "--start-fullscreen"
+          // `--alsa-output-device=${audioSinkName}`,
+          // '--start-maximized',
+          // '--kiosk',
+          // "--start-fullscreen"
         ],
         ignoreDefaultArgs: ["--enable-automation"],
         protocolTimeout: 0,
