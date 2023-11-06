@@ -1,14 +1,11 @@
-const OSPService = require('./src/OSPService')
-const fs = require('fs');
-OSPService.initializeOSPService()
-.then(async ()=>{
-    const instance1 = new OSPService();
-    await instance1.navigateToURL('https://www.youtube.com/watch?v=eYPyIq5Y3Rk');
-    const stream1 = await instance1.startVideoRecording();
-    // await instance1.streamToFile('file.mp4')
-    // setTimeout(async ()=>{
-    //     await instance1.stopVideoRecording();
-    //     process.exit(0)
-    // },60*1000*2)
-},()=>{})
- 
+const {onReady,createStreamer} = require("./src/index");
+const config = {
+    debug:true
+};
+onReady(config).then(async ()=>{
+    console.log("READY")
+    const streamer = createStreamer();
+    await streamer.onNavigate('chrome://version')
+},(err)=>{
+    console.log("ERROR",err)
+})

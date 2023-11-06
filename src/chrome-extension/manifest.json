@@ -6,10 +6,6 @@
 	"background": {
 		"service_worker": "service_worker.js"
 	},
-	"sockets": {
-		"tcp": { "connect": ["*"] },
-		"udp": { "connect": ["*"] }
-	},
-	"permissions": ["tabs", "tabCapture","sockets","storage", "activeTab", "scripting", "sockets.udp", "sockets.tcp"],
+	"permissions": ["tabs", "tabCapture","sockets","storage", "activeTab", "scripting"],
 	"host_permissions": ["*://*/*", "<all_urls>", "https://*/*", "http://*/*"]
 }
