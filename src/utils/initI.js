@@ -1,6 +1,7 @@
 const { audioSinkI } = require("./audioSinkI");
 const { browserI } = require("./browserI");
 const { cleanI } = require("./cleanI");
+const { mediaServerI } = require("./mediaServerI");
 const { xvfbI } = require("./xvfbI");
 function InitI(){
     const _inner = {};
@@ -15,6 +16,7 @@ function InitI(){
                 Object.assign(_inner.options,options)
             }
             try{
+                await mediaServerI.onReady();
                 if(!debug) await xvfbI.onReady();
                 if(!debug) await audioSinkI.onReady();
                 await cleanI.onReady();

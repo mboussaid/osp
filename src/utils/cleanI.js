@@ -1,4 +1,5 @@
 const { audioSinkI } = require("./audioSinkI");
+const { mediaServerI } = require("./mediaServerI");
 const { xvfbI } = require("./xvfbI");
 
 function CleanI(){
@@ -15,6 +16,7 @@ function CleanI(){
         })
     }
     service.clean = ()=>{
+        mediaServerI.stop();
         xvfbI.stop();
         audioSinkI.stop();
     }
