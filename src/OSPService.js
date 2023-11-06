@@ -258,7 +258,3 @@ const streamI = require("./utils/streamerI");
 //   }
 // }
 // module.exports = OSPService;
-module.exports = {
-  onReady:initI.onReady,
-  createStreamer:streamI.createStreamer
-}
