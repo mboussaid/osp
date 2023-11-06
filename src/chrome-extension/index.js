@@ -471,3 +471,14 @@
 //     }
 //   );
 // }
+function onStartStreaming(id){
+  return new Promise((resolve,reject)=>{
+    if(!id) return reject();
+  })
+}
+function onStopStreaming(id){
+  return new Promise((resolve,reject)=>{
+    if(!id) return reject();
+    resolve();
+  })
+}

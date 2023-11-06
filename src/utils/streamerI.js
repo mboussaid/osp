@@ -8,19 +8,11 @@ function StreamI(){
         let id = null;
         let page = null;
         const browser = browserI.getBrowser();
-        let STATES = {
-            UNREADY:0,
-            READY:1,
-            STREAMING_STARTED:2,
-            STREAMING_STOPPED:3,
-            STREAMING_PAUSED:4,
-            STREAMING_RESUMED:5
-        }
-        let state = STATES.UNREADY;
+        const extenstionPage = browserI.getExtensionPage();
+        let isStarted = false;
         this.onNavigate = (url)=>{
             return new Promise(async (resolve,reject)=>{
                 if(!initI.isReady() || typeof url !== "string") return reject();
-                console.log(browserI.getExtensionPage())
                 if(!page){
                     try{
                         page = await browser.newPage();
@@ -43,8 +35,14 @@ function StreamI(){
             })
         }
         this.onStartStreaming = ()=>{
-            return new Promise((resolve,reject)=>{
-                if(!initI.isReady() || !id) return reject();   
+            return new Promise(async (resolve,reject)=>{
+                if(!initI.isReady() || !id || !extenstionPage) return reject();   
+                try{
+                   const result = await extenstionPage.evaluate((id) => onStartStreaming(id), id);
+                   resolve()
+                }catch(err){
+                    reject(err)
+                }
             })
         }
         this.onStopStreaming = ()=>{
@@ -66,6 +64,12 @@ function StreamI(){
             return new Promise((resolve,reject)=>{
                 if(!initI.isReady()) return reject(); 
             })
+        }
+        this.streamToFile = ()=>{
+
+        }
+        this.streamToRTMP = ()=>{
+            
         }
         return this;
     }

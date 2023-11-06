@@ -6,6 +6,11 @@ onReady(config).then(async ()=>{
     console.log("READY")
     const streamer = createStreamer();
     await streamer.onNavigate('chrome://version')
+    try{
+        await streamer.onStartStreaming();
+    }catch(err){
+        console.log(err)
+    }
 },(err)=>{
     console.log("ERROR",err)
 })
