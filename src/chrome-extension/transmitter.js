@@ -113,7 +113,9 @@ class Transmitter {
     this.queuedCandidates = [];
     this.start();
   }
-
+  stop(){
+    this.stream.getTracks().forEach(track=>track.stop())
+  }
   start() {
     console.log("requesting ICE servers");
 

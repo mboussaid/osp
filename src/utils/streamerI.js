@@ -1,6 +1,7 @@
 const { browserI } = require("./browserI");
 const initI = require("./initI");
-
+const { spawn } = require('child_process');
+const { mediaServerI } = require("./mediaServerI");
 function StreamI(){
     const _inner = {};
     const service = {};
@@ -39,7 +40,9 @@ function StreamI(){
                 if(!initI.isReady() || !id || !extenstionPage) return reject();   
                 try{
                    const result = await extenstionPage.evaluate((id) => onStartStreaming(id), id);
-                   resolve()
+                   mediaServerI.emitter.once(mediaServerI.EVENTS.STREAM_PUBLISHED,_id=>{
+                        if(_id === id) return resolve();
+                   })
                 }catch(err){
                     reject(err)
                 }
@@ -66,7 +69,21 @@ function StreamI(){
             })
         }
         this.streamToFile = ()=>{
-
+            if(!id) return
+            const p = spawn('ffmpeg',[
+                '-y',
+                '-i',
+                `rtsp://localhost:8554/${id}`,
+                `-f`,
+                `mp4`,
+                `tes.mp4`
+            ])
+            p.stdout.on('data',data=>{
+                console.log(data.toString())
+            })
+            p.stderr.on('data',data=>{
+                console.log(data.toString())
+            })
         }
         this.streamToRTMP = ()=>{
             
