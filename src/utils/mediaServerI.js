@@ -25,13 +25,13 @@ function MediaServerI(){
             ])
             p.stdout.on('data',data=>{
                 data = data.toString();
-                // check published
-                const match1 = data.match(/publishing to path '([^']+)'/);
+                // // check published
+                // const match1 = data.match(/publishing to path '([^']+)'/);
 
-                if (match1 && match1[1]) {
-                  const pathValue = match1[1];
-                  service.emitter.emit(service.EVENTS.STREAM_PUBLISHED,pathValue)
-                }
+                // if (match1 && match1[1]) {
+                //   const pathValue = match1[1];
+                //   service.emitter.emit(service.EVENTS.STREAM_PUBLISHED,pathValue)
+                // }
                 console.log(data)
             })
             p.stderr.on('data',data=>{

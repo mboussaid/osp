@@ -40,9 +40,9 @@ function StreamI(){
                 if(!initI.isReady() || !id || !extenstionPage) return reject();   
                 try{
                    const result = await extenstionPage.evaluate((id) => onStartStreaming(id), id);
-                   mediaServerI.emitter.once(mediaServerI.EVENTS.STREAM_PUBLISHED,_id=>{
-                        if(_id === id) return resolve();
-                   })
+                //    mediaServerI.emitter.once(mediaServerI.EVENTS.STREAM_PUBLISHED,_id=>{
+                //         if(_id === id) return resolve();
+                //    })
                 }catch(err){
                     reject(err)
                 }

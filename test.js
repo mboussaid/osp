@@ -1,11 +1,11 @@
 const {onReady,createStreamer} = require("./src/index");
 const config = {
-    debug:false
+    debug:true
 };
 onReady(config).then(async ()=>{
     console.log("READY")
     const streamer = createStreamer();
-    await streamer.onNavigate('https://www.youtube.com/watch?v=YYpF_hwjjCY')
+    await streamer.onNavigate('chrome://about')
     try{
         await streamer.onStartStreaming();
         // streamer.streamToFile();

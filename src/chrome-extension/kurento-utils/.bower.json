@@ -1,0 +1,60 @@
+{
+  "name": "kurento-utils",
+  "description": "Kurento JavaScript Utilities",
+  "license": "Apache-2.0",
+  "keywords": [
+    "kurento",
+    "mcu",
+    "sfu",
+    "rpc",
+    "mediaserver",
+    "pipe",
+    "audio",
+    "video",
+    "media",
+    "recording",
+    "stream",
+    "streaming",
+    "videoconference",
+    "broadcast",
+    "multicast",
+    "client",
+    "server",
+    "browser",
+    "chrome",
+    "edge",
+    "firefox",
+    "safari",
+    "webrtc",
+    "datachannel",
+    "sdp",
+    "ice",
+    "stun",
+    "turn",
+    "h264",
+    "h.264",
+    "opus",
+    "vp8",
+    "rtp",
+    "srtp",
+    "rtsp"
+  ],
+  "homepage": "https://kurento.openvidu.io/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kurento/kurento-utils-js.git"
+  },
+  "authors": [
+    "Kurento <kurento@openvidu.io> (https://kurento.openvidu.io/)",
+    "Kurento Community <kurento@googlegroups.com> (https://kurento.openvidu.io/)"
+  ],
+  "_release": "78c3edfa2b",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "78c3edfa2b20a208f3d4bd0ef210b3dc63a530a0"
+  },
+  "_source": "https://github.com/Kurento/kurento-utils-bower.git",
+  "_target": "master",
+  "_originalSource": "kurento-utils"
+}

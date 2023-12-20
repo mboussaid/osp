@@ -26,14 +26,14 @@ function BrowserI(options){
             "--no-zygote",
             "--no-sandbox"
     ]
-        if(!debug){
+        // if(!debug){
             args.concat([
                 `--alsa-output-device=${audioSinkI.getAudioSinkName()}`,
                 '--start-maximized',
                 '--kiosk',
                 "--start-fullscreen"
             ])
-        }
+        // }
         return args;
     }
     service.isReady = ()=> _inner.isReady;

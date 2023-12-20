@@ -16,9 +16,9 @@ function InitI(){
                 Object.assign(_inner.options,options)
             }
             try{
-                await mediaServerI.onReady();
-                if(!debug) await xvfbI.onReady();
-                if(!debug) await audioSinkI.onReady();
+                // await mediaServerI.onReady();
+                await xvfbI.onReady();
+                await audioSinkI.onReady();
                 await cleanI.onReady();
                 await browserI.onReady(options);
                 _inner.isReady = true;

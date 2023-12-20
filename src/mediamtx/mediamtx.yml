@@ -135,7 +135,7 @@ rtmpServerCert: server.crt
 # Allow reading streams with the HLS protocol.
 hls: yes
 # Address of the HLS listener.
-hlsAddress: :8888
+hlsAddress: :8881
 # Enable TLS/HTTPS on the HLS server.
 # This is required for Low-Latency HLS.
 hlsEncryption: no
